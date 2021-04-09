@@ -1,10 +1,9 @@
 # README
 
-This is a fork of PortCMIS from <https://chemistry.apache.org/dotnet/portcmis.html>, using the new .net project format, supporting .net stadnard 2.0 and above.
-The driving reason behind this implementation, was the need to support atompub binding over https with invalid ssl certificates, for development reasons.
+This is a fork of PortCMIS from <https://chemistry.apache.org/dotnet/portcmis.html>, using the new .net project format, supporting .net stadnard 2.0 and above.  
+The driving reason behind this implementation, was the need to support atompub binding over https with invalid ssl certificates, for development reasons.  
 
-PortCMIS requests are based on HttpClient
-Supporting invalid certificates with HttpClient requires a code like the following one:
+PortCMIS requests are based on HttpClient. Supporting invalid certificates with HttpClient requires a code like the following one:  
 
 ```csharp
 using (var handler = new HttpClientHandler())
@@ -18,8 +17,8 @@ using (var handler = new HttpClientHandler())
 }
 ```  
 
-But the current codebase of PortCMIS at the above location, is a .netstandard 1.0 library, and thus missing support for ServerCertificateValidationCallback property.
-According to the following Microsoft doc, the property ServerCertificateValidationCallback is supported from version .NetStadnard 1.3 and above (see the Applies to table):
+But the current codebase of PortCMIS at the above location, is a .netstandard 1.0 library, and thus missing support for ServerCertificateValidationCallback property.  
+According to the following Microsoft doc, the property ServerCertificateValidationCallback is supported from version .NetStadnard 1.3 and above (see the Applies to table):  
 
 <https://docs.microsoft.com/en-us/dotnet/api/system.net.http.httpclienthandler.servercertificatecustomvalidationcallback?view=net-5.0>
 
