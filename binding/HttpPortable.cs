@@ -27,6 +27,7 @@ using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
+using System.Security.Authentication;
 using System.Threading.Tasks;
 
 namespace PortCMIS.Binding.Http
@@ -283,7 +284,6 @@ namespace PortCMIS.Binding.Http
                     {
                         // create a HTTP client handler
                         HttpClientHandler httpClientHandler = null;
-
                         if (authProvider != null)
                         {
                             httpClientHandler = authProvider.CreateHttpClientHandler();
@@ -293,12 +293,6 @@ namespace PortCMIS.Binding.Http
                             httpClientHandler = new HttpClientHandler();
                         }
 
-                        httpClientHandler.ClientCertificateOptions = ClientCertificateOption.Manual;
-                        httpClientHandler.ServerCertificateCustomValidationCallback =
-                            (httpRequestMessage, cert, cetChain, policyErrors) =>
-                            {
-                                return true;
-                            };
 
                         // redirects
                         if (httpClientHandler.SupportsRedirectConfiguration)
@@ -319,14 +313,24 @@ namespace PortCMIS.Binding.Http
                         // authentication
                         httpClientHandler.PreAuthenticate = true;
                         httpClientHandler.UseDefaultCredentials = false;
-                       
+
 
                         // authentication provider
                         if (authProvider != null)
                         {
                             authProvider.PrepareHttpClientHandler(httpClientHandler);
                         }
-
+                        httpClientHandler.ClientCertificateOptions = ClientCertificateOption.Manual;
+                        httpClientHandler.SslProtocols =
+                            SslProtocols.Ssl3 |
+                            SslProtocols.Tls |
+                            SslProtocols.Tls11 |
+                            SslProtocols.Tls12;                        
+                        httpClientHandler.ServerCertificateCustomValidationCallback =
+                            (httpRequestMessage, cert, cetChain, policyErrors) =>
+                            {
+                                return true;
+                            };
                         // create HttpClient
                         httpClient = new HttpClient(httpClientHandler, true);
 
