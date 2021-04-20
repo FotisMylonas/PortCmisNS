@@ -320,9 +320,9 @@ namespace PortCMIS.Binding.Http
                         {
                             authProvider.PrepareHttpClientHandler(httpClientHandler);
                         }
-                        string sslProtocols = "Default";
-                        SslProtocols prot = SslProtocols.Default;
-                        object sslProtocolsobj = session.GetValue("SslProtocols");
+                        string sslProtocols = SessionParameterDefaults.SslProtocol;
+                        SslProtocols prot = SslProtocols.None;
+                        object sslProtocolsobj = session.GetValue(SessionParameter.SslProtocols, SessionParameterDefaults.SslProtocol);
                         if (sslProtocolsobj != null)
                         {
                             sslProtocols = $"{sslProtocolsobj}";
@@ -350,7 +350,6 @@ namespace PortCMIS.Binding.Http
                         {
                             httpClient.Timeout = TimeSpan.FromMilliseconds(connectTimeout);
                         }
-
                         session.PutValue(InvokerHttpClient, httpClient);
                     }
                 }

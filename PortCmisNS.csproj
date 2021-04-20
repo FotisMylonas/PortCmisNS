@@ -13,4 +13,8 @@
     <Folder Include="Properties\" />
   </ItemGroup>
 
+  <ItemGroup>
+    <PackageReference Include="microsoft.extensions.logging" Version="5.0.0" />
+  </ItemGroup>
+
 </Project>

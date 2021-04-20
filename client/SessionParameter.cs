@@ -148,5 +148,6 @@ namespace PortCMIS.Client
         /// <summary>Defines if getObjectOfLatestVersion should use the version series ID instead of the object ID
         /// (Workaround for SharePoint 2010 and SharePoint 2013)</summary>
         public const string LatestVersionWithVersionSeriesId = "org.apache.chemistry.portcmis.workaround.getLatestVersionWithVersionSeriesId";
+        public const string SslProtocols = "org.apache.chemistry.portcmis.binding.sslprotocols";
     }
 }
