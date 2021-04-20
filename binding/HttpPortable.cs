@@ -320,12 +320,22 @@ namespace PortCMIS.Binding.Http
                         {
                             authProvider.PrepareHttpClientHandler(httpClientHandler);
                         }
+                        string sslProtocols = "Default";
+                        SslProtocols prot = SslProtocols.Default;
+                        object sslProtocolsobj = session.GetValue("SslProtocols");
+                        if (sslProtocolsobj != null)
+                        {
+                            sslProtocols = $"{sslProtocolsobj}";
+                            if (!string.IsNullOrWhiteSpace(sslProtocols))
+                            {
+                                if (Enum.TryParse<SslProtocols>(sslProtocols, out SslProtocols result))
+                                {
+                                    prot = result;
+                                }                                       
+                            }
+                        }
                         httpClientHandler.ClientCertificateOptions = ClientCertificateOption.Manual;
-                        httpClientHandler.SslProtocols =
-                            SslProtocols.Ssl3 |
-                            SslProtocols.Tls |
-                            SslProtocols.Tls11 |
-                            SslProtocols.Tls12;                        
+                        httpClientHandler.SslProtocols = prot;                        
                         httpClientHandler.ServerCertificateCustomValidationCallback =
                             (httpRequestMessage, cert, cetChain, policyErrors) =>
                             {
