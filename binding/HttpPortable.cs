@@ -321,8 +321,11 @@ namespace PortCMIS.Binding.Http
                             authProvider.PrepareHttpClientHandler(httpClientHandler);
                         }
                         string sslProtocols = SessionParameterDefaults.SslProtocol;
+                        string clientCertificateOption = SessionParameterDefaults.ClientCertificateOption;
                         SslProtocols prot = SslProtocols.None;
+                        ClientCertificateOption clientOption = ClientCertificateOption.Manual;
                         object sslProtocolsobj = session.GetValue(SessionParameter.SslProtocols, SessionParameterDefaults.SslProtocol);
+                        object clientCertificateOptionObj = session.GetValue(SessionParameter.ClientCertificateOption, SessionParameterDefaults.ClientCertificateOption);
                         if (sslProtocolsobj != null)
                         {
                             sslProtocols = $"{sslProtocolsobj}";
@@ -334,7 +337,18 @@ namespace PortCMIS.Binding.Http
                                 }                                       
                             }
                         }
-                        httpClientHandler.ClientCertificateOptions = ClientCertificateOption.Manual;
+                        if (clientCertificateOptionObj != null)
+                        {
+                            clientCertificateOption = $"{clientCertificateOptionObj}";
+                            if (!string.IsNullOrWhiteSpace(clientCertificateOption))
+                            {
+                                if (Enum.TryParse<ClientCertificateOption>(clientCertificateOption, out ClientCertificateOption result))
+                                {
+                                    clientOption = result;
+                                }
+                            }
+                        }
+                        httpClientHandler.ClientCertificateOptions = clientOption;
                         httpClientHandler.SslProtocols = prot;                        
                         httpClientHandler.ServerCertificateCustomValidationCallback =
                             (httpRequestMessage, cert, cetChain, policyErrors) =>

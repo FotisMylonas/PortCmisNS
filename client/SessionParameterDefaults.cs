@@ -45,5 +45,6 @@ namespace PortCMIS.Client
         /// <summary>Default time-to-live for paths in the object cache</summary>
         public const int CacheTTLPathToId = 30 * 60 * 1000;
         public const string SslProtocol = "None";
+        public const string ClientCertificateOption = "Manual";
     }
 }

@@ -149,5 +149,6 @@ namespace PortCMIS.Client
         /// (Workaround for SharePoint 2010 and SharePoint 2013)</summary>
         public const string LatestVersionWithVersionSeriesId = "org.apache.chemistry.portcmis.workaround.getLatestVersionWithVersionSeriesId";
         public const string SslProtocols = "org.apache.chemistry.portcmis.binding.sslprotocols";
+        public const string ClientCertificateOption = "org.apache.chemistry.portcmis.binding.clientcertificateoption";
     }
 }
