@@ -10,7 +10,7 @@ PortCMIS requests are based on HttpClient. Supporting invalid certificates with 
 using (var handler = new HttpClientHandler())
 {
     handler.ServerCertificateValidationCallback = ...
-
+    handler.SslProtocols = ...                        
     using (var client = new HttpClient(handler))
     {
         ...
@@ -27,7 +27,6 @@ So i just took the time to wrap it up in a .NET Standard 2.0 library and also wr
 
 ```csharp
 public class HttpsAlwaysTrustCertificateInvoker : IHttpInvoker
-        };
 ```
 
 The class implements the "always trust" part and also gives you the ability to define the prefered ssl protocol the internal HttpClientHandler should use:
@@ -72,3 +71,6 @@ You can configure PortCMIS to use the new invoker by defining the appropriate se
             return res;
         }
 ```
+
+The scope of this project is limited within my current dev needs, i don't intend to actively support it.  
+Still, perhaps it could be helpfull for people facing the same situation.
