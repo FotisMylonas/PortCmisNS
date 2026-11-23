@@ -1,0 +1,60 @@
+name: "Deploy to NuGet"
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+permissions:
+  contents: read
+
+env:
+  PROJECT_PATH: 'PortCmisNS.csproj'
+  PACKAGE_OUTPUT_DIRECTORY: '${{ github.workspace }}/output'
+  NUGET_SOURCE_URL: 'https://api.nuget.org/v3/index.json'
+
+jobs:
+  deploy:
+    name: 'Deploy'
+    runs-on: 'ubuntu-latest'
+    steps:
+      - name: 'Checkout'
+        uses: actions/checkout@v4
+
+      - name: 'Get version from tag'
+        id: version
+        run: echo "value=${GITHUB_REF_NAME#v}" >> "$GITHUB_OUTPUT"
+
+      - name: 'Install .NET'
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '10.0.x'
+
+      - name: 'Restore packages'
+        run: dotnet restore "${{ env.PROJECT_PATH }}"
+
+      - name: 'Build project'
+        run: >-
+          dotnet build "${{ env.PROJECT_PATH }}"
+          --no-restore
+          --configuration Release
+          -p:Version=${{ steps.version.outputs.value }}
+          -p:GeneratePackageOnBuild=false
+
+      - name: 'Pack project'
+        run: >-
+          dotnet pack "${{ env.PROJECT_PATH }}"
+          --no-restore
+          --no-build
+          --configuration Release
+          --include-symbols
+          -p:SymbolPackageFormat=snupkg
+          -p:Version=${{ steps.version.outputs.value }}
+          --output "${{ env.PACKAGE_OUTPUT_DIRECTORY }}"
+
+      - name: 'Push package'
+        run: >-
+          dotnet nuget push "${{ env.PACKAGE_OUTPUT_DIRECTORY }}/PortCmisNS.${{ steps.version.outputs.value }}.nupkg"
+          --api-key "${{ secrets.NUGET_AUTH_TOKEN }}"
+          --source "${{ env.NUGET_SOURCE_URL }}"
+          --skip-duplicate

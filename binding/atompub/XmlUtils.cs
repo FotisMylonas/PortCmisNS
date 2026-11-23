@@ -190,7 +190,13 @@ namespace PortCMIS.Binding.AtomPub
             XmlReaderSettings settings = new XmlReaderSettings()
             {
                 MaxCharactersInDocument = 0,
-                CloseInput = true
+                // Keep CloseInput = false: AtomPubParser.Parse() explicitly drains and disposes
+                // the underlying stream via IOUtils.ConsumeAndClose(stream) after parser.Dispose().
+                // With CloseInput = true, parser.Dispose() prematurely disposes ChunkedEncodingReadStream
+                // on .NET SocketsHttpHandler, triggering an async background drain (DrainOnDisposeAsync)
+                // on SslStream that races with IOUtils.ConsumeAndClose()'s synchronous Read() and throws:
+                // "NotSupportedException: This method may not be called when another read operation is pending."
+                CloseInput = false
             };
 
             return XmlReader.Create(stream, settings);
