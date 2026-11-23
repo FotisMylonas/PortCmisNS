@@ -7,10 +7,12 @@
     <PackageProjectUrl>https://github.com/FotisMylonas/PortCmisNS</PackageProjectUrl>
     <Authors>Fotis Mylonas</Authors>
     <Company />
+    <DefaultItemExcludes>$(DefaultItemExcludes);tests\**</DefaultItemExcludes>
   </PropertyGroup>
 
   <ItemGroup>
     <Folder Include="Properties\" />
+    <InternalsVisibleTo Include="PortCmisNS.Tests" />
   </ItemGroup>
 
 </Project>
